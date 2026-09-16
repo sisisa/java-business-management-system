@@ -1,0 +1,2 @@
+# java-business-management-system
+Javaを使用して開発する業務システムを想定したWebアプリケーション
