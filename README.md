@@ -145,7 +145,7 @@ Database
 | API          | REST API        |
 | テスト          | JUnit           |
 | バージョン管理      | Git / GitHub    |
-| 開発環境         | IntelliJ IDEA   |
+| 開発環境         | VSCode  |
 | API確認        | Postman         |
 
 ※ フロントエンドについては、Javaによるバックエンド開発を主目的とするため、現時点では最小限の構成とします。
