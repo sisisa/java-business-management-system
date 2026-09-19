@@ -811,5 +811,58 @@ erDiagram
     EMPLOYEE ||--o{ ASSIGNMENT : "assigned"
     EMPLOYEE ||--o| USER : "has account"
 ```
+### Customerテーブルのデータ構成
+| 列名         | データ型                    | 制約           | 説明           |
+| ------------ | --------------------- | ---------------- | ---------------- |
+| `customer_id`   | INT            | プライマリーキー(PK)・Not Null  | 顧客を識別する重複しないID|
+| `customer_name`   | VARCHAR           | Not Null  | 顧客名|
+| `customer_kana_name`   | VARCHAR           | Not Null  | 顧客名(カナ)|
+| `email`   | VARCHAR           | -  | メールアドレス|
+| `phone_number`   | INT           | -  | 電話番号|
+| `gender`   | CHAR / INT           | -  | 性別（1=男性, 2=女性, 0=不明・未回答などの選択形式）|
+| `customer_items`   | JSONB           | -  | 郵便番号・住所などの情報を格納するJSONBオブジェクト|
+
+### Projectテーブルのデータ構成
+| 列名         | データ型                    | 制約           | 説明           |
+| ------------ | --------------------- | ---------------- | ---------------- |
+| `project_id`   | INT / UUID       | プライマリーキー(PK)・Not Null  | プロジェクトを識別する重複しないID|
+| `project_code`   | VARCHAR           | Not Null  | 識別用のプロジェクトコード(無かったら列を削除)|
+| `project_name`   | VARCHAR           | Not Null  | プロジェクト名|
+| `project_status`   | VARCHAR/INT            | Not Null  | 未着手・進行中・完了済などのステータスを示す|
+| `created_at`   | TIMESTAMP           | CURRENT_TIMESTAMPで自動登録  | 作成日時|
+| `updated_at`   | TIMESTAMP           | CURRENT_TIMESTAMPで自動登録  | 更新日時|
+
+### Employeeテーブルのデータ構成
+| 列名         | データ型                    | 制約           | 説明           |
+| ------------ | --------------------- | ---------------- | ---------------- |
+| `employee_id`   | INT            | プライマリーキー(PK)・Not Null  | 社員を識別する重複しないID|
+| `employee_code`   | VARCHAR           | Not Null  | 現在の部署コード|
+| `employee_name`   | VARCHAR           | Not Null  | 社員名|
+| `employee_kana_name`   | VARCHAR           | Not Null  | 社員名(カナ)|
+| `email`   | VARCHAR           | -  | メールアドレス|
+| `phone_number`   | INT           | -  | 電話番号|
+| `gender`   | CHAR / INT           | -  | 性別（1=男性, 2=女性, 0=不明・未回答などの選択形式）|
+| `employee_items`   | JSONB           | -  | 郵便番号・住所などの情報を格納するJSONBオブジェクト|
+| `employee_work_items`   | JSONB           | -  | これまでの職務情報を格納するJSONBオブジェクト(〇〇〜〇〇まではこの場所で働いていたなどの情報)|
+
+### Assignmentテーブルのデータ構成
+| 列名         | データ型                    | 制約           | 説明           |
+| ------------ | --------------------- | ---------------- | ---------------- |
+| `assignment_id`   | INT            | プライマリーキー(PK)・Not Null  | 割り当てを識別する重複しないID|
+| `project_id`   | INT / UUID           | 外部キー(FK)・Not Null  | Projectテーブルの主キーを参照する外部キー|
+| `employee_id`   | INT    | 外部キー(FK)・Not Null  | Employeeテーブルの主キーを参照する外部キー|
+| `start_date`   | DATE           | Not Null  | 開始日|
+| `end_date`   | DATE           | Not Null  | 終了日|
+| `assignment_status`  | VARCHAR/INT            | Not Null  | ステータスを示す|
+| `created_at`   | TIMESTAMP           | CURRENT_TIMESTAMPで自動登録  | 作成日時|
+| `updated_at`   | TIMESTAMP           | CURRENT_TIMESTAMPで自動登録  | 更新日時|
+
+### Userテーブルのデータ構成
+| 列名         | データ型                    | 制約           | 説明           |
+| ------------ | --------------------- | ---------------- | ---------------- |
+| `user_id`   | INT / UUID       | プライマリーキー(PK)・Not Null  | システムを使っているユーザーを識別するID|
+| `password_hash`   | VARCHAR           | Not Null  | 暗号化されたパスワード(そのままのパスワードでは登録しない)|
+| `status`   | VARCHAR/INT            | Not Null  | ユーザーの状態を示す|
+
 
 
