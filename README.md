@@ -812,6 +812,6 @@ erDiagram
     CUSTOMER ||--o{ PROJECT : "案件を持つ"
     PROJECT ||--o{ ASSIGNMENT : "社員を割り当てる"
     EMPLOYEE ||--o{ ASSIGNMENT : "案件に参加する"
-
+```
 ```
 
