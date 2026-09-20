@@ -809,60 +809,79 @@ erDiagram
     CUSTOMER ||--o{ PROJECT : "has"
     PROJECT ||--o{ ASSIGNMENT : "has"
     EMPLOYEE ||--o{ ASSIGNMENT : "assigned"
+    EMPLOYEE ||--o{ EMPLOYEE_WORK_HISTORY : "has"
     EMPLOYEE ||--o| USER : "has account"
 ```
 ### Customerテーブルのデータ構成
-| 列名         | データ型                    | 制約           | 説明           |
-| ------------ | --------------------- | ---------------- | ---------------- |
-| `customer_id`   | INT            | プライマリーキー(PK)・Not Null  | 顧客を識別する重複しないID|
-| `customer_name`   | VARCHAR           | Not Null  | 顧客名|
-| `customer_kana_name`   | VARCHAR           | Not Null  | 顧客名(カナ)|
-| `email`   | VARCHAR           | -  | メールアドレス|
-| `phone_number`   | INT           | -  | 電話番号|
-| `gender`   | CHAR / INT           | -  | 性別（1=男性, 2=女性, 0=不明・未回答などの選択形式）|
-| `customer_items`   | JSONB           | -  | 郵便番号・住所などの情報を格納するJSONBオブジェクト|
+| 列名 | データ型 | 制約 | 説明 |
+|---|---|---|---|
+| customer_id | UUID | PK, NOT NULL | 顧客を識別するID |
+| customer_name | VARCHAR | NOT NULL | 顧客名 |
+| customer_kana_name | VARCHAR | NOT NULL | 顧客名（カナ） |
+| email | VARCHAR | NULL | メールアドレス |
+| phone_number | VARCHAR | NULL | 電話番号 |
+| gender | VARCHAR | NULL | 性別 |
+| customer_items | JSONB | NULL | 顧客固有の追加情報 |
+| created_at | TIMESTAMP | NOT NULL | 作成日時 |
+| updated_at | TIMESTAMP | NOT NULL | 更新日時 |
 
 ### Projectテーブルのデータ構成
-| 列名         | データ型                    | 制約           | 説明           |
-| ------------ | --------------------- | ---------------- | ---------------- |
-| `project_id`   | INT / UUID       | プライマリーキー(PK)・Not Null  | プロジェクトを識別する重複しないID|
-| `project_code`   | VARCHAR           | Not Null  | 識別用のプロジェクトコード(無かったら列を削除)|
-| `project_name`   | VARCHAR           | Not Null  | プロジェクト名|
-| `project_status`   | VARCHAR/INT            | Not Null  | 未着手・進行中・完了済などのステータスを示す|
-| `created_at`   | TIMESTAMP           | CURRENT_TIMESTAMPで自動登録  | 作成日時|
-| `updated_at`   | TIMESTAMP           | CURRENT_TIMESTAMPで自動登録  | 更新日時|
+| 列名 | データ型 | 制約 | 説明 |
+|---|---|---|---|
+| project_id | UUID | PK, NOT NULL | 案件を識別するID |
+| customer_id | UUID | FK, NOT NULL | 顧客ID |
+| project_code | VARCHAR | NULL | 案件コード |
+| project_name | VARCHAR | NOT NULL | 案件名 |
+| project_status | VARCHAR | NOT NULL | 案件ステータス |
+| created_at | TIMESTAMP | NOT NULL | 作成日時 |
+| updated_at | TIMESTAMP | NOT NULL | 更新日時 |
 
 ### Employeeテーブルのデータ構成
-| 列名         | データ型                    | 制約           | 説明           |
-| ------------ | --------------------- | ---------------- | ---------------- |
-| `employee_id`   | INT            | プライマリーキー(PK)・Not Null  | 社員を識別する重複しないID|
-| `employee_code`   | VARCHAR           | Not Null  | 現在の部署コード|
-| `employee_name`   | VARCHAR           | Not Null  | 社員名|
-| `employee_kana_name`   | VARCHAR           | Not Null  | 社員名(カナ)|
-| `email`   | VARCHAR           | -  | メールアドレス|
-| `phone_number`   | INT           | -  | 電話番号|
-| `gender`   | CHAR / INT           | -  | 性別（1=男性, 2=女性, 0=不明・未回答などの選択形式）|
-| `employee_items`   | JSONB           | -  | 郵便番号・住所などの情報を格納するJSONBオブジェクト|
-| `employee_work_items`   | JSONB           | -  | これまでの職務情報を格納するJSONBオブジェクト(〇〇〜〇〇まではこの場所で働いていたなどの情報)|
+| 列名 | データ型 | 制約 | 説明 |
+|---|---|---|---|
+| employee_id | UUID | PK, NOT NULL | 社員を識別するID |
+| employee_code | VARCHAR | NOT NULL | 社員コード |
+| employee_name | VARCHAR | NOT NULL | 社員名 |
+| employee_kana_name | VARCHAR | NOT NULL | 社員名（カナ） |
+| email | VARCHAR | NULL | メールアドレス |
+| phone_number | VARCHAR | NULL | 電話番号 |
+| gender | VARCHAR | NULL | 性別 |
+| employee_items | JSONB | NULL | 社員固有の追加情報 |
+| created_at | TIMESTAMP | NOT NULL | 作成日時 |
+| updated_at | TIMESTAMP | NOT NULL | 更新日時 |
+
+### EmployeeWorkHistoryテーブルのデータ構成
+| 列名 | データ型 | 制約 | 説明 |
+|---|---|---|---|
+| work_history_id | UUID | PK, NOT NULL | 職務履歴ID |
+| employee_id | UUID | FK, NOT NULL | 社員ID |
+| start_date | DATE | NOT NULL | 開始日 |
+| end_date | DATE | NULL | 終了日 |
+| organization_name | VARCHAR | NOT NULL | 所属先・勤務先 |
+| position | VARCHAR | NULL | 役職・職種 |
+| description | TEXT | NULL | 職務内容 |
+| created_at | TIMESTAMP | NOT NULL | 作成日時 |
+| updated_at | TIMESTAMP | NOT NULL | 更新日時 |
 
 ### Assignmentテーブルのデータ構成
-| 列名         | データ型                    | 制約           | 説明           |
-| ------------ | --------------------- | ---------------- | ---------------- |
-| `assignment_id`   | INT            | プライマリーキー(PK)・Not Null  | 割り当てを識別する重複しないID|
-| `project_id`   | INT / UUID           | 外部キー(FK)・Not Null  | Projectテーブルの主キーを参照する外部キー|
-| `employee_id`   | INT    | 外部キー(FK)・Not Null  | Employeeテーブルの主キーを参照する外部キー|
-| `start_date`   | DATE           | Not Null  | 開始日|
-| `end_date`   | DATE           | Not Null  | 終了日|
-| `assignment_status`  | VARCHAR/INT            | Not Null  | ステータスを示す|
-| `created_at`   | TIMESTAMP           | CURRENT_TIMESTAMPで自動登録  | 作成日時|
-| `updated_at`   | TIMESTAMP           | CURRENT_TIMESTAMPで自動登録  | 更新日時|
+| 列名 | データ型 | 制約 | 説明 |
+|---|---|---|---|
+| assignment_id | UUID | PK, NOT NULL | アサインID |
+| project_id | UUID | FK, NOT NULL | 案件ID |
+| employee_id | UUID | FK, NOT NULL | 社員ID |
+| start_date | DATE | NOT NULL | アサイン開始日 |
+| end_date | DATE | NULL | アサイン終了日 |
+| assignment_status | VARCHAR | NOT NULL | アサイン状態 |
+| created_at | TIMESTAMP | NOT NULL | 作成日時 |
+| updated_at | TIMESTAMP | NOT NULL | 更新日時 |
 
 ### Userテーブルのデータ構成
-| 列名         | データ型                    | 制約           | 説明           |
-| ------------ | --------------------- | ---------------- | ---------------- |
-| `user_id`   | INT / UUID       | プライマリーキー(PK)・Not Null  | システムを使っているユーザーを識別するID|
-| `password_hash`   | VARCHAR           | Not Null  | 暗号化されたパスワード(そのままのパスワードでは登録しない)|
-| `status`   | VARCHAR/INT            | Not Null  | ユーザーの状態を示す|
-
-
-
+| 列名 | データ型 | 制約 | 説明 |
+|---|---|---|---|
+| user_id | UUID | PK, NOT NULL | ユーザーID |
+| employee_id | UUID | FK, UNIQUE, NOT NULL | 対応する社員ID |
+| username | VARCHAR | UNIQUE, NOT NULL | ログイン識別子 |
+| password_hash | VARCHAR | NOT NULL | ハッシュ化されたパスワード |
+| status | VARCHAR | NOT NULL | ユーザー状態 |
+| created_at | TIMESTAMP | NOT NULL | 作成日時 |
+| updated_at | TIMESTAMP | NOT NULL | 更新日時 |
