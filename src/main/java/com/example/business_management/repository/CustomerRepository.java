@@ -8,5 +8,4 @@ import com.example.business_management.entity.Customer;
 
 public interface CustomerRepository
         extends JpaRepository<Customer, UUID> {
-
 }
