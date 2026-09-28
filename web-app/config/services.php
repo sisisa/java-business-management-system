@@ -14,6 +14,10 @@ return [
     |
     */
 
+    // Spring Boot APIの接続先
+    'java_api' => [
+        'url' => env('JAVA_API_URL', 'http://127.0.0.1:8080'),
+    ],
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),
     ],

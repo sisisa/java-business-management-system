@@ -14,17 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.business_management.dto.customer.CustomerCreateRequest;
 import com.example.business_management.dto.customer.CustomerResponse;
-import com.example.business_management.dto.customer.CustomerUpdateRequest;
 import com.example.business_management.service.CustomerService;
-
-import jakarta.validation.Valid;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Customer APIのHTTPリクエストを担当するController。
- *
- * ControllerではHTTPに関する処理だけを行い、
  * 業務処理はCustomerServiceへ委譲する。
  */
 @RestController
@@ -37,62 +32,40 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    /**
-     * Customerを全件取得する。
-     */
+    /** 顧客を全件取得する。 */
     @GetMapping
     public List<CustomerResponse> findAll() {
         return customerService.findAll();
     }
 
-    /**
-     * Customerを1件取得する。
-     */
+    /** 顧客を1件取得する。 */
     @GetMapping("/{customerId}")
     public CustomerResponse findById(
             @PathVariable UUID customerId) {
-
         return customerService.findById(customerId);
     }
 
-    /**
-     * Customerを登録する。
-     *
-     * @ValidによってRequest DTOの入力チェックを実行する。
-     */
+    /** 顧客を登録する。 */
     @PostMapping
     public ResponseEntity<CustomerResponse> create(
-            @Valid @RequestBody CustomerCreateRequest request) {
-
+            @RequestBody JsonNode request) {
         CustomerResponse response = customerService.create(request);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    /**
-     * Customerを更新する。
-     */
+    /** 顧客を更新する。 */
     @PutMapping("/{customerId}")
     public CustomerResponse update(
             @PathVariable UUID customerId,
-            @Valid @RequestBody CustomerUpdateRequest request) {
-
+            @RequestBody JsonNode request) {
         return customerService.update(customerId, request);
     }
 
-    /**
-     * Customerを削除する。
-     *
-     * 正常終了時は204 No Contentを返す。
-     */
+    /** 顧客を削除する。 */
     @DeleteMapping("/{customerId}")
     public ResponseEntity<Void> delete(
             @PathVariable UUID customerId) {
-
         customerService.delete(customerId);
-
         return ResponseEntity.noContent().build();
     }
 }
